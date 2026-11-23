@@ -1,0 +1,115 @@
+<!DOCTYPE html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1,viewport-fit=cover'><title>ClickChat</title>
+<link href='https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&display=swap' rel='stylesheet'>
+<style>
+:root{color-scheme:dark;--ink:#1B1033;--ink2:#2A1B4D;--coral:#FF4F81;--sun:#FFD23F;--paper:#FFF8F0;--mut:#A99BC9}
+*{box-sizing:border-box;margin:0}html,body{height:100%}
+body{background:var(--ink);color:var(--paper);font:500 16px/1.35 'Bricolage Grotesque',system-ui,sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+button,input{font:inherit;color:inherit}button{background:none;border:0;cursor:pointer}
+input{background:var(--ink2);border:2px solid transparent;border-radius:12px;padding:12px 14px;width:100%}
+:focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+.wm{height:36px;aspect-ratio:727/176;display:block}
+.hero{width:100%;max-width:340px;aspect-ratio:727/722;align-self:center}
+.btn{background:var(--sun);color:var(--ink);font-weight:700;border-radius:12px;padding:12px 16px}.btn.alt{background:rgba(255,255,255,.12);color:var(--paper)}.btn.sm{padding:7px 12px}
+[hidden]{display:none!important}
+#auth{max-width:380px;margin:0 auto;padding:4vh 24px;display:flex;flex-direction:column;gap:12px}
+#err{color:var(--coral);min-height:1.4em}.link{color:var(--mut);text-decoration:underline}
+#app{height:100%;display:flex;flex-direction:column}
+header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px 8px}
+main{flex:1;overflow:auto}
+.row{display:flex;align-items:center;gap:12px;padding:11px 18px;width:100%;text-align:left}
+.nm{flex:1;min-width:0}.nm b,.row small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.row small{color:var(--mut)}
+.av{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#1B1033;flex:none;object-fit:cover}
+.av.big{width:96px;height:96px;font-size:40px}
+.av.ring{box-shadow:0 0 0 3px var(--ink),0 0 0 6px var(--coral)}.av.seen{box-shadow:0 0 0 3px var(--ink),0 0 0 6px #5b4a85}
+.sk{color:var(--sun);font-weight:800}
+.hd{padding:12px 18px 4px;color:var(--mut);font-weight:700}.note{color:var(--mut);padding:12px 18px}
+nav{display:flex;gap:6px;background:var(--ink2);padding:6px}
+nav button{flex:1;padding:12px 4px;font-weight:700;color:var(--mut);border-radius:12px}nav .on{color:var(--paper);background:rgba(255,255,255,.1)}
+#th{position:fixed;inset:0;background:var(--ink);display:flex;flex-direction:column;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);z-index:5}
+#msgs{flex:1;overflow:auto;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.m{max-width:78%;padding:9px 14px;border-radius:16px;background:var(--ink2);align-self:flex-start;overflow-wrap:anywhere}.m.me{align-self:flex-end;background:var(--coral);color:#fff}
+.m small{display:block;opacity:.8;margin-bottom:4px}.m img{max-width:100%;border-radius:10px;display:block;margin:2px 0}
+.bar{display:flex;gap:8px;padding:10px 14px;align-items:center}
+#sv{position:fixed;inset:0;background:#000;z-index:8}
+#svi{position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
+#svb{position:absolute;top:calc(env(safe-area-inset-top) + 8px);left:12px;right:12px;height:4px;background:rgba(255,255,255,.3);border-radius:2px}
+#svb i{display:block;height:100%;width:0;background:#fff;border-radius:2px}
+#svn{position:absolute;top:calc(env(safe-area-inset-top) + 20px);left:14px;font-weight:700;text-shadow:0 1px 6px #000}
+#svc{position:absolute;top:calc(env(safe-area-inset-top) + 16px);right:12px}
+#svrb{position:absolute;left:0;right:0;bottom:0;padding-bottom:calc(env(safe-area-inset-bottom) + 10px)}
+#toast{position:fixed;left:50%;bottom:80px;transform:translateX(-50%);background:var(--paper);color:var(--ink);padding:10px 16px;border-radius:999px;font-weight:700;z-index:9}
+</style></head><body>
+<svg width='0' height='0' style='position:absolute' aria-hidden='true'><defs>
+<g id='o'><path fill='#FF4F81' fill-rule='evenodd' d='M299 277l-1 20 13 19 7 1 5 -8 -4 -31zM332 144l-7 13 3 15 9 5 13 -3 4 -6 1 -8 -14 -15zM340 153l10 10 -3 7 -10 -3 -3 -4 0 -4zM258 114l-6 9 5 30 4 6 3 0 4 -7 10 4 5 -15 0 -13 -5 -6 -13 -7zM269 130l5 3 3 9 -5 6 -7 -5 -1 -8zM179 0l-5 6 0 6 22 60 5 28 14 32 3 76 13 69 7 12 -1 43 5 19 0 24 6 4 4 10 9 -2 20 -14 18 -3 17 1 10 -9 21 -10 14 -1 9 7 3 13 5 7 24 22 20 28 6 2 14 -14 29 -9 9 -9 20 -12 -12 -23 -36 -51 -6 -14 -13 -14 2 -5 -3 -5 0 -7 4 -9 14 -7 3 -6 23 -23 -20 -11 -16 -13 -40 -25 -20 -17 -18 -10 -17 -18 -2 0 1 7 17 16 5 13 -10 18 -16 8 -7 0 -15 -15 -4 -14 2 -10 9 -17 -6 -4 -16 4 -4 -7 4 -4 11 -4 5 0 14 8 7 0 0 -2 -13 -8 -53 -53 -18 -12 -17 -16 -15 -9 -14 -14 -21 -13zM252 269l8 -7 4 5 9 1 36 -2 32 4 23 -1 5 6 -3 4 -9 2 -26 -2 3 21 -1 12 -11 15 -8 1 -9 -4 -18 -27 0 -18 -29 -2zM235 90l29 -5 7 4 -4 7 -31 5 4 21 14 -17 8 -2 22 11 9 11 1 16 -4 13 -6 11 -13 9 -10 0 -9 -7 -7 -17 -4 -25 -8 3 -4 -5 -4 -23z'/><path fill='#A99BC9' fill-rule='evenodd' d='M471 470l-5 6 1 12 8 5 13 -2 4 -7 -1 -13 -5 -3zM485 472l4 6 -1 4 -5 3 -8 -3 1 5 -2 1 -4 -4 1 -8 7 -4zM301 469l-1 9 11 13 10 1 5 -4 1 -13 -5 -9 -14 0zM303 474l6 -4 8 -1 5 4 1 11 -3 -3 -7 2 0 -8 -4 0 -2 4zM301 460l-19 2 -1 14 4 7 8 1 0 -3 -8 -6 0 -9 17 -3zM336 455l2 19 -3 5 2 11 4 -2 1 -15 4 -8 4 10 0 11 6 -3 11 -16 4 7 -1 14 5 -2 0 -12 -4 -12 -7 1 -10 13 -4 -15 -6 -1 -2 2 -3 -7zM255 453l-10 1 -9 12 0 13 7 8 8 0 2 -5 -8 1 -4 -4 -2 -8 2 -3 5 5 5 0 5 -4 1 -14zM252 457l2 5 -6 7 -4 -7zM388 451l-9 15 0 7 19 20 4 0 0 -3 -19 -19 2 -6 9 6 7 -2 0 -10 -3 -6zM390 455l6 3 0 9 -7 -4 -2 -4zM230 444l-18 -1 -5 6 -3 18 -14 -19 -6 2 -6 15 -4 -2 -9 -14 -8 0 0 4 4 -1 13 17 8 -1 6 -15 14 20 5 1 5 -25 5 -3 13 2zM451 442l-4 0 2 20 -6 3 0 4 4 0 -4 11 0 6 5 1 -1 -5 5 -14 13 2 -3 -5 -10 -2zM281 437l-3 0 0 8 -11 26 -5 23 4 0 4 -18 12 -30z'/><path fill='#A99BC9' fill-rule='evenodd' d='M371 694l1 25 4 0 1 -14 -3 -11zM291 684l0 3 10 0 7 17 6 6 5 -1 6 -7 4 0 16 10 6 -1 3 -5 0 -11 -3 0 0 7 -4 6 -16 -10 -8 0 -8 7 -11 -21zM144 690l0 8 6 5 7 2 24 -2 0 -3 -5 -2 -3 -10 -7 -5 -15 2zM148 693l4 -4 7 0 11 11 -5 2 -8 -1 -8 -4zM285 676l-10 1 -16 13 -4 -1 2 6 -3 5 0 10 4 7 7 5 12 -1 1 -4 -13 0 -7 -9 0 -6 3 -4 8 1 13 -4 4 -6zM283 681l-1 6 -5 6 -6 2 -8 -2 12 -11zM698 710l-7 3 -12 0 -9 -4 -2 -3 4 -6 13 1 4 -2 2 -9 -3 -5 -8 0 -10 4 -10 -15 -4 0 0 19 -28 -3 -5 13 -14 11 1 -23 -3 -2 -5 1 0 3 4 1 -2 9 0 13 2 2 7 -1 14 -12 10 10 17 0 4 -2 5 2 1 -5 10 6 18 1 6 -3zM630 700l4 -4 19 0 4 2 1 10 -9 4 -8 0 -9 -7zM687 691l0 3 -4 3 -7 0 -5 -3 10 -5zM118 670l-6 2 -2 13 -9 12 -13 -21 -9 -1 -4 2 -3 6 1 27 -6 7 0 4 3 0 6 -6 0 -32 5 -4 6 3 12 23 4 1 2 -7 8 -10 3 -14 9 14 1 13 3 0 2 -4 -1 -8zM596 690l-5 -1 -3 -5 -5 2 -16 -1 -5 5 -1 -3 8 -18 0 -4 -3 0 -23 55 5 -2 12 -27 2 9 11 10 7 3 6 0 4 -3 5 2 -5 -18 5 -1zM568 690l6 -2 11 5 1 14 -2 2 -9 -3 -8 -7 -2 -5zM506 655l-15 8 -2 18 6 13 17 21 3 0 1 -3 -22 -28 0 -17 13 -8 26 4 5 6 3 0 0 -4 -6 -6zM441 655l-14 44 4 -1 1 4 3 1 3 -5 0 -7 13 -5 4 7 0 6 -5 13 4 1 4 -7 0 -18 -4 -6 -15 2 0 -7 6 -21zM408 654l-5 1 1 3 5 2 -2 18 -12 1 1 3 10 2 -5 32 5 -5 4 -26 13 -1 6 2 -2 -5 -16 -2 2 -20zM375 651l-5 2 -2 8 4 0zM216 648l-1 7 8 20 -26 -4 -5 6 0 10 5 6 13 8 11 0 2 -2 0 7 3 1 2 -4 0 -25 -6 -26zM196 678l3 -3 6 0 13 4 6 4 -1 10 -6 5 -7 -2 -14 -11z'/></g>
+<g id='k'><path fill='#FFF8F0' fill-rule='evenodd' d='M200 602l-4 8 8 25 -1 8 3 4 6 1 5 -4 1 -14 -8 -25 -3 -3zM267 580l-11 9 -3 6 0 20 5 12 9 10 19 2 10 -8 1 -10 -3 -3 -7 0 -6 7 -6 -1 -5 -6 -4 -16 6 -8 7 5 6 0 4 -5 0 -5 -7 -8zM205 555l-4 2 -2 5 2 20 4 3 6 0 4 -5 3 -17 -4 -6zM342 534l-4 3 -2 29 -8 1 -6 6 1 10 10 11 -1 12 -3 8 -6 5 0 7 4 4 11 -3 6 -10 2 -12 3 -4 17 18 3 13 6 6 6 1 5 -4 0 -7 -9 -20 -17 -18 -12 -5 29 -4 4 -6 -1 -5 -4 -3 -24 2 0 -30 -4 -5zM163 518l-7 0 -3 3 -4 12 2 58 -4 33 2 4 -1 14 6 5 7 -2 2 -12 -2 -13 4 -24 0 -47 -2 -11 6 -6 0 -7zM36 499l-16 12 -12 5 -6 8 -2 27 2 23 31 47 12 12 48 30 18 1 6 -7 -1 -8 -9 -2 -6 3 -40 -24 -18 -17 -27 -40 -1 -36 4 -6 10 -4 17 -12 21 -5 11 0 41 8 5 -4 0 -7 -18 -8 -34 -4z'/></g>
+<g id='y'><path fill='#FFD23F' fill-rule='evenodd' d='M618 576l-4 4 0 8 -12 0 -8 7 -3 8 1 14 6 10 9 6 10 1 9 -5 3 4 6 1 4 -4 -4 -16 6 -1 3 -7 -8 -11 -8 -4 -3 -13zM607 599l12 2 1 14 -4 7 -6 -1 -7 -9 0 -8zM439 535l-12 10 -10 26 -1 18 3 11 10 16 12 10 20 8 24 1 4 -4 -3 -7 -20 -1 -10 -3 -11 -6 -10 -10 -6 -12 -1 -16 8 -22 6 -7 19 -6 23 9 5 0 3 -3 0 -5 -7 -6 -22 -7 -7 0zM537 523l-8 4 -5 9 -3 28 1 20 -5 34 5 6 6 1 3 -2 6 -11 0 -14 6 -7 4 0 14 15 5 16 -2 5 1 11 4 5 5 1 4 -3 1 -12 -3 -17 -7 -16 -11 -12 -8 -5 -14 1 12 -40 -2 -13 -3 -3zM671 513l-6 4 0 4 5 8 1 33 -3 1 -16 -7 -23 -2 -3 3 0 5 4 4 17 1 26 11 -1 38 6 9 5 1 5 -4 0 -5 -4 -4 1 -31 37 2 4 -6 -1 -3 -5 -3 -19 0 -17 -4 -2 -40 -5 -11zM252 268l0 4 5 5 29 2 1 19 12 21 5 5 9 4 10 -1 10 -14 1 -14 -2 -20 26 2 7 -1 4 -4 -4 -7 -23 1 -32 -4 -36 2 -9 -1 -4 -5 -5 1zM300 277l18 1 2 3 3 27 -6 9 -5 -1 -5 -5 -9 -15 0 -16zM337 154l-4 7 2 5 8 4 5 0 2 -2 0 -6 -3 -5 -5 -4zM268 130l-4 4 1 10 4 4 4 0 4 -5 -1 -7 -3 -5zM302 123l-3 3 0 5 3 3 16 -4 7 5 -11 22 2 15 4 7 15 12 22 -9 8 -13 0 -13 -21 -22 -1 -6 -9 -1 -14 -8 -7 0zM333 144l7 1 15 16 -2 8 -6 6 -7 2 -6 -1 -8 -9 -1 -9zM234 90l-5 3 -4 6 0 10 4 15 3 4 9 -2 7 36 4 6 8 6 12 0 12 -8 6 -11 4 -13 -1 -18 -8 -10 -22 -11 -10 2 -12 17 -4 -10 -1 -10 11 -4 21 -2 3 -3 0 -5 -3 -3zM259 114l18 8 6 7 0 11 -6 16 -4 -4 -6 0 -5 7 -5 -7 -5 -28z'/></g>
+</defs></svg>
+<div id='auth' hidden><svg class='hero' viewBox='0 0 727 722' role='img' aria-label='Welcome to ClickChat. Made with Claude.'><use href='#o'/><use href='#k'/><use href='#y'/></svg><p id='tag' style='color:var(--mut)'>Log in to chat with your friends.</p>
+<input id='u' placeholder='Username' autocapitalize='none' autocomplete='username' aria-label='Username'>
+<input id='p' type='password' placeholder='Password (6+ characters)' autocomplete='current-password' aria-label='Password'>
+<button class='btn' id='go'>Log in</button><button class='link' id='sw'>New here? Create an account</button><p id='err' role='alert'></p></div>
+<div id='app' hidden>
+<header><svg class='wm' viewBox='0 494 727 176' role='img' aria-label='ClickChat'><use href='#k'/><use href='#y'/></svg></header>
+<main><section id='chats'></section>
+<section id='stories' hidden><div id='sts'></div></section>
+<section id='find' hidden><div class='bar'><input id='q' placeholder='Search usernames' autocapitalize='none' aria-label='Search usernames'></div><div id='res'></div><div id='reqs'></div></section>
+<section id='me' hidden><div style='padding:18px;display:flex;flex-direction:column;gap:12px'><div id='mav' style='align-self:center'></div><button class='btn alt sm' id='mph' style='align-self:center'>Change photo</button><input id='mn' maxlength='24' placeholder='Display name' aria-label='Display name'><input id='mb' maxlength='80' placeholder='Bio' aria-label='Bio'><button class='btn' id='msave'>Save profile</button><button class='btn alt' id='lo'>Log out</button></div></section></main>
+<nav><button data-t='chats' class='on'>Chats</button><button data-t='stories'>Stories</button><button data-t='find' id='tf'>Friends</button><button data-t='me'>Me</button></nav></div>
+<input type='file' id='sf' accept='image/*' hidden><input type='file' id='cf' accept='image/*' hidden><input type='file' id='mf' accept='image/*' hidden>
+<div id='th' hidden><header><button class='btn alt sm' id='tb'>Back</button><b id='tn'></b><span id='tsk' class='sk'></span></header><div id='msgs'></div>
+<div class='bar'><button class='btn alt' id='ta' aria-label='Send a photo'>Photo</button><input id='tin' placeholder='Send a chat' maxlength='300' aria-label='Message'><button class='btn' id='ts'>Send</button></div></div>
+<div id='sv' hidden><img id='svi' alt='Story'><div id='svb'><i></i></div><div id='svn'></div><button class='btn alt sm' id='svc'>Close</button><div id='svrb' class='bar'><input id='svr' placeholder='Reply to this story' maxlength='300' aria-label='Reply to story'><button class='btn' id='svs'>Send</button></div></div>
+<div id='toast' hidden></div>
+<script>
+const $=s=>document.querySelector(s);
+let T=localStorage.cc_t||'',ME=localStorage.cc_u||'',S={me:{u:'',n:'',p:'',b:''},f:[],i:[],o:[]},mode='login',cur=null,cn=0,pb=0,pt,rt,ST=[],sp=null,si=0,stm;
+let seenS=new Set();try{seenS=new Set(JSON.parse(localStorage.cc_seen||'[]'))}catch(e){}
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const av=(p,k)=>{if(p.p)return`<img class='av ${k||''}' src='/api/img?id=${p.p}' alt=''>`;let h=0;for(const c of p.u)h=(h*31+c.charCodeAt(0))%360;return`<span class='av ${k||''}' style='background:hsl(${h} 75% 70%)'>${esc((p.n||p.u)[0]).toUpperCase()}</span>`};
+let tt;const toast=m=>{const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,2600)};
+async function api(a,d){let r,j;try{r=await fetch('/api',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({...d,a,t:T})});j=await r.json()}catch(e){throw Error('Can\u2019t reach the server')}if(r.status===401&&T)logout();if(!r.ok)throw Error(j.error||'Something went wrong');return j}
+function logout(){localStorage.removeItem('cc_t');localStorage.removeItem('cc_u');location.reload()}
+$('#lo').onclick=logout;
+$('#sw').onclick=()=>{mode=mode==='login'?'signup':'login';const s=mode==='signup';$('#go').textContent=s?'Create account':'Log in';$('#sw').textContent=s?'Have an account? Log in':'New here? Create an account';$('#tag').textContent=s?'Pick a username your friends can search for.':'Log in to chat with your friends.';$('#p').autocomplete=s?'new-password':'current-password';$('#err').textContent=''};
+async function submit(){$('#err').textContent='';try{const j=await api(mode,{u:$('#u').value,p:$('#p').value});T=j.t;ME=j.u;localStorage.cc_t=T;localStorage.cc_u=ME;start()}catch(e){$('#err').textContent=e.message}}
+$('#go').onclick=submit;$('#p').onkeydown=e=>{if(e.key==='Enter')submit()};
+function start(){$('#auth').hidden=true;$('#app').hidden=false;refresh();clearInterval(rt);rt=setInterval(()=>{if(document.hidden)return;refresh();if(!$('#stories').hidden)loadSt()},15000)}
+async function refresh(){try{S=await api('inbox');draw()}catch(e){}}
+function draw(){
+ $('#chats').innerHTML=S.f.length?S.f.map(p=>`<button class='row' data-n='${p.u}'>${av(p)}<span class='nm'><b>${esc(p.n)}</b><small>@${p.u}${p.b?' \u00b7 '+esc(p.b):''}</small></span>${p.s?`<span class='sk'>\ud83d\udd25 ${p.s}</span>`:''}</button>`).join(''):`<p class='note'>No friends yet. Open Friends to search for someone and send a request.</p>`;
+ $('#reqs').innerHTML=(S.i.length?`<div class='hd'>Friend requests</div>`+S.i.map(p=>`<div class='row'>${av(p)}<span class='nm'><b>${esc(p.n)}</b><small>@${p.u}</small></span><button class='btn sm' data-yes='${p.u}'>Accept</button><button class='btn alt sm' data-no='${p.u}'>Decline</button></div>`).join(''):'')+(S.o.length?`<div class='hd'>Sent requests</div>`+S.o.map(p=>`<div class='row'>${av(p)}<span class='nm'><b>${esc(p.n)}</b><small>Waiting for them to accept</small></span></div>`).join(''):'');
+ $('#tf').textContent='Friends'+(S.i.length?` (${S.i.length})`:'')}
+function drawMe(){$('#mav').innerHTML=av(S.me,'big');$('#mn').value=S.me.n||'';$('#mb').value=S.me.b||''}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));['chats','stories','find','me'].forEach(k=>$('#'+k).hidden=k!==b.dataset.t);if(b.dataset.t==='stories')loadSt();if(b.dataset.t==='me')drawMe()});
+function shrink(f,o){return new Promise((ok,no)=>{const im=new Image();im.onload=()=>{const c=document.createElement('canvas'),x=c.getContext('2d');if(o.sq){c.width=c.height=o.sq;const s=Math.max(o.sq/im.width,o.sq/im.height);x.drawImage(im,(o.sq-im.width*s)/2,(o.sq-im.height*s)/2,im.width*s,im.height*s)}else{const s=Math.min(1,o.max/Math.max(im.width,im.height)),w=c.width=Math.round(im.width*s),h=c.height=Math.round(im.height*s);x.drawImage(im,0,0,w,h);if(o.cap){const fs=Math.round(w/16);x.fillStyle='rgba(0,0,0,.55)';x.fillRect(0,h*.78,w,fs*2);x.fillStyle='#fff';x.font='700 '+fs+'px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(o.cap,w/2,h*.78+fs,w-40)}}URL.revokeObjectURL(im.src);ok(c.toDataURL('image/jpeg',o.q))};im.onerror=()=>no(Error('Couldn\u2019t read that photo'));im.src=URL.createObjectURL(f)})}
+let ft;$('#q').oninput=()=>{clearTimeout(ft);ft=setTimeout(find,250)};
+async function find(){const q=$('#q').value.toLowerCase().replace(/[^a-z0-9_]/g,'');if(!q){$('#res').innerHTML='';return}try{const j=await api('search',{q}),has=u=>S.f.some(p=>p.u===u),req=u=>S.o.some(p=>p.u===u);$('#res').innerHTML=(j.n.length?'':`<p class='note'>No one called \u201c${esc(q)}\u201d yet.</p>`)+j.n.map(p=>`<div class='row'>${av(p)}<span class='nm'><b>${esc(p.n)}</b><small>@${p.u}</small></span>${has(p.u)?`<small>Friends</small>`:req(p.u)?`<small>Requested</small>`:`<button class='btn sm' data-add='${p.u}'>Add</button>`}</div>`).join('')}catch(e){}}
+$('#find').onclick=async e=>{const b=e.target.closest('button');if(!b)return;const d=b.dataset;try{if(d.add)await api('add',{to:d.add});else if(d.yes)await api('respond',{from:d.yes,yes:1});else if(d.no)await api('respond',{from:d.no,yes:0});else return;await refresh();find()}catch(x){toast(x.message)}};
+$('#msave').onclick=async()=>{try{await api('prof',{n:$('#mn').value,b:$('#mb').value});await refresh();drawMe();toast('Profile saved')}catch(e){toast(e.message)}};
+$('#mph').onclick=()=>$('#mf').click();
+$('#mf').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{const img=await shrink(f,{sq:256,q:.8});await api('prof',{n:$('#mn').value,b:$('#mb').value,img});await refresh();drawMe();toast('Photo updated')}catch(x){toast(x.message)}};
+$('#chats').onclick=e=>{const b=e.target.closest('[data-n]');if(b)openT(S.f.find(p=>p.u===b.dataset.n))};
+function bub(m){const d=document.createElement('div');d.className='m'+(m.f===ME?' me':'');if(m.r){const l=document.createElement('small');l.textContent=m.f===ME?'You replied to their story':'Replied to your story';d.appendChild(l)}if(m.im){const i=document.createElement('img');i.src='/api/img?id='+m.im;i.alt='Photo';i.onload=()=>$('#msgs').scrollTop=1e9;d.appendChild(i)}if(m.x){const t=document.createElement('span');t.textContent=m.x;d.appendChild(t)}$('#msgs').appendChild(d)}
+async function poll(){const n=cur;if(!n||pb||document.hidden)return;pb=1;try{const j=await api('poll',{w:n.u,n:cn});if(n!==cur)return;j.m.forEach(bub);cn+=j.m.length;if(j.m.length)$('#msgs').scrollTop=1e9}catch(e){}finally{pb=0}}
+function openT(p){cur=p;cn=0;$('#msgs').innerHTML='';$('#tn').textContent=p.n;$('#tsk').textContent=p.s?'\ud83d\udd25 '+p.s:'';$('#th').hidden=false;poll();clearInterval(pt);pt=setInterval(poll,3000)}
+$('#tb').onclick=()=>{cur=null;clearInterval(pt);$('#th').hidden=true;refresh()};
+async function send(){const x=$('#tin').value.trim();if(!x||!cur)return;$('#tin').value='';try{await api('send',{w:cur.u,x});poll()}catch(e){toast(e.message);$('#tin').value=x}}
+$('#ts').onclick=send;$('#tin').onkeydown=e=>{if(e.key==='Enter')send()};
+$('#ta').onclick=()=>$('#cf').click();
+$('#cf').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f||!cur)return;try{toast('Sending photo...');await api('send',{w:cur.u,img:await shrink(f,{max:960,q:.65})});poll()}catch(x){toast(x.message)}};
+const unseen=s=>s.items.filter(i=>!seenS.has(i.id)).length;
+async function loadSt(){try{ST=(await api('stories')).s;drawSt()}catch(e){}}
+function drawSt(){const mine=ST.find(s=>s.u===ME),others=ST.filter(s=>s.u!==ME).sort((a,b)=>unseen(b)-unseen(a));
+ $('#sts').innerHTML=`<div class='row'><button class='row' style='flex:1;padding:0' data-v='${ME}'>${av(S.me,mine?(unseen(mine)?'ring':'seen'):'')}<span class='nm'><b>My story</b><small>${mine?mine.items.length+' posted in the last 24 hours':'Nothing posted yet'}</small></span></button><button class='btn sm' id='addst'>Add</button></div>`+(others.length?`<div class='hd'>Friends</div>`+others.map(s=>`<button class='row' data-v='${s.u}'>${av(s,unseen(s)?'ring':'seen')}<span class='nm'><b>${esc(s.n)}</b><small>${unseen(s)?unseen(s)+' new':'Watched'}</small></span></button>`).join(''):`<p class='note'>Your friends' stories show up here for 24 hours.</p>`)}
+$('#sts').onclick=e=>{const v=e.target.closest('[data-v]');if(v)return openS(v.dataset.v);if(e.target.id==='addst')$('#sf').click()};
+$('#sf').onchange=async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;const cap=(prompt('Add a caption (optional)')||'').trim().slice(0,60);try{toast('Posting story...');await api('post',{img:await shrink(f,{max:1280,q:.7,cap})});toast('Story posted');loadSt()}catch(x){toast(x.message)}};
+function openS(u){sp=ST.find(s=>s.u===u);if(!sp){if(u===ME)$('#sf').click();return}const k=sp.items.findIndex(i=>!seenS.has(i.id));si=k<0?0:k;$('#svn').textContent=sp.u===ME?'My story':sp.n;$('#svrb').hidden=sp.u===ME;$('#sv').hidden=false;showS()}
+function showS(){clearTimeout(stm);if(si>=sp.items.length)return closeS();const it=sp.items[si];seenS.add(it.id);try{localStorage.cc_seen=JSON.stringify([...seenS].slice(-300))}catch(e){}$('#svi').src='/api/img?id='+it.id;const b=$('#svb i');b.style.transition='none';b.style.width='0';void b.offsetWidth;b.style.transition='width 5s linear';b.style.width='100%';stm=setTimeout(()=>{si++;showS()},5000)}
+function closeS(){clearTimeout(stm);$('#sv').hidden=true;$('#svr').value='';drawSt()}
+$('#sv').onclick=e=>{if(e.target.closest('#svrb'))return;si++;showS()};$('#svc').onclick=e=>{e.stopPropagation();closeS()};
+$('#svr').onfocus=()=>{clearTimeout(stm);const b=$('#svb i'),w=getComputedStyle(b).width;b.style.transition='none';b.style.width=w};
+$('#svr').onblur=()=>{if(!$('#svr').value.trim()&&!$('#sv').hidden)setTimeout(()=>{if(!$('#sv').hidden&&document.activeElement!==$('#svr'))showS()},150)};
+async function reply(){const x=$('#svr').value.trim();if(!x||!sp)return;try{await api('reply',{w:sp.u,x,sid:sp.items[si].id});$('#svr').value='';$('#svr').blur();toast('Reply sent');showS()}catch(e){toast(e.message)}}
+$('#svs').onclick=reply;$('#svr').onkeydown=e=>{if(e.key==='Enter')reply()};
+if(T&&ME)start();else $('#auth').hidden=false;
+</script></body></html>
